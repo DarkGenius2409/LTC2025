@@ -1,3 +1,5 @@
+import 'package:client/category_card.dart';
+import 'package:client/search_results.dart';
 import 'package:flutter/material.dart';
 
 class BrowsePage extends StatefulWidget {
@@ -8,8 +10,51 @@ class BrowsePage extends StatefulWidget {
 }
 
 class _BrowsePageState extends State<BrowsePage> {
+  final List<String> categories = [
+    "Fantasy",
+    "Science Fiction",
+    "Historical",
+    "Romance",
+    "Thriller",
+    "Drama",
+    "Mystery"
+  ];
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Browse"),
+        backgroundColor: ThemeData().primaryColor,
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(top: 25, left: 15, right: 15),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(), labelText: "Search"),
+              onSubmitted: (value) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SearchResults(search: value)));
+              },
+            ),
+            SingleChildScrollView(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: ListView.builder(
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      return CategoryCard(category: categories[index]);
+                    }),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

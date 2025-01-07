@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class BookCard extends StatelessWidget {
   final String title;
-  final List<dynamic> authors;
-  final int pages;
+  final List<dynamic>? authors;
+  final int? pages;
   final String? cover;
 
   const BookCard(
@@ -13,9 +13,9 @@ class BookCard extends StatelessWidget {
       required this.pages,
       this.cover});
 
-  String listToString(List<dynamic> list) {
+  String listToString(List<dynamic>? list) {
     String output = "";
-    for (int i = 0; i < list.length; i++) {
+    for (int i = 0; i < list!.length; i++) {
       output += list[i] as String;
     }
     return output;
@@ -29,7 +29,9 @@ class BookCard extends StatelessWidget {
       child: SizedBox.expand(
           child: Stack(
         children: [
-          SizedBox.expand(child: Image.network(cover!)),
+          (cover != null)
+              ? SizedBox.expand(child: Image.network(cover!))
+              : Text("Cover Unavailable"),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
@@ -42,10 +44,13 @@ class BookCard extends StatelessWidget {
                     title,
                     style: const TextStyle(fontSize: 22.5),
                   ),
-                  Text(
-                    listToString(authors),
-                    style: const TextStyle(fontSize: 17.5),
-                  ),
+                  if (authors != null)
+                    Text(
+                      listToString(authors),
+                      style: const TextStyle(fontSize: 17.5),
+                    )
+                  else
+                    Text("No author found"),
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: Text(

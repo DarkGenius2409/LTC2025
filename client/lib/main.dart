@@ -1,7 +1,6 @@
 import 'package:client/SignInPage.dart';
 import 'package:client/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
