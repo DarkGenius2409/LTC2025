@@ -46,7 +46,7 @@ class _BookDisplayState extends State<BookDisplay> {
       "bookID": id
     };
     final response = await dio.post(
-        'http://10.0.2.2:8000/updateHistory/${user!.email}',
+        'https://shelfmate-api-f882711e4206.herokuapp.com/updateHistory/${user!.email}',
         data: bookHistory);
   }
 

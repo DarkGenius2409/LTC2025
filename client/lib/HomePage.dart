@@ -26,8 +26,8 @@ class _HomePageState extends State<HomePage> {
   final dio = Dio();
 
   Future<List<Book>> fetchBooks(int num) async {
-    final response = await http
-        .get(Uri.parse('http://10.0.2.2:8000/books/${user!.email}-$num'));
+    final response = await http.get(Uri.parse(
+        'https://shelfmate-api-f882711e4206.herokuapp.com/books/${user!.email}-$num'));
     if (response.statusCode == 200) {
       final jsonresponse = json.decode(response.body);
       List<Book> books = [];
@@ -41,7 +41,6 @@ class _HomePageState extends State<HomePage> {
             pageCount: currentBook["pageCount"],
             cover: currentBook['cover'],
             link: currentBook['link']));
-        print(books[i].title);
       }
       return books;
     } else {
@@ -68,7 +67,7 @@ class _HomePageState extends State<HomePage> {
       "bookID": bookID
     };
     final response = await dio.post(
-        'http://10.0.2.2:8000/updateHistory/${user!.email}',
+        'https://shelfmate-api-f882711e4206.herokuapp.com/updateHistory/${user!.email}',
         data: bookHistory);
   }
 
@@ -82,7 +81,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("App"),
+        title: const Text("Shelfmate"),
         backgroundColor: ThemeData().primaryColor,
         foregroundColor: Colors.white,
       ),

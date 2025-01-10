@@ -1,4 +1,3 @@
-import 'package:client/category_card.dart';
 import 'package:client/navigation.dart';
 import 'package:client/preference_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

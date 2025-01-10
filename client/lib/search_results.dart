@@ -26,11 +26,11 @@ class _SearchResultsState extends State<SearchResults> {
     String endpoint;
     if (widget.subject != null) {
       endpoint =
-          'http://10.0.2.2:8000/search/subject/${widget.subject}-${pageKey * _pageSize}-$_pageSize';
+          'https://shelfmate-api-f882711e4206.herokuapp.com/search/subject/${widget.subject}-${pageKey * _pageSize}-$_pageSize';
       debugPrint(endpoint);
     } else if (widget.search != null) {
       endpoint =
-          'http://10.0.2.2:8000/search/${widget.search}-${pageKey * _pageSize}-$_pageSize';
+          'https://shelfmate-api-f882711e4206.herokuapp.com/search/${widget.search}-${pageKey * _pageSize}-$_pageSize';
     } else {
       throw Exception("Invalid Search");
     }
