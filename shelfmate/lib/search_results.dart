@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:shelfmate/book.dart';
 import 'package:shelfmate/book_display.dart';
 import 'package:dio/dio.dart';
@@ -21,20 +22,21 @@ class _SearchResultsState extends State<SearchResults> {
   final dio = Dio();
   final PagingController<int, Book> _pagingController =
       PagingController<int, Book>(firstPageKey: 0);
+  String api = kDebugMode
+      ? "http://10.0.2.2:8000"
+      : 'https://shelfmate-api-f882711e4206.herokuapp.com';
 
   Future<List<Book>> fetchBooks(int pageKey) async {
     String endpoint;
     if (widget.subject != null) {
       endpoint =
-          'https://shelfmate-api-f882711e4206.herokuapp.com/search/subject/${widget.subject}-${pageKey * _pageSize}-$_pageSize';
-      debugPrint(endpoint);
+          '$api/search/subject/${widget.subject}-${pageKey * _pageSize}-$_pageSize';
     } else if (widget.search != null) {
       endpoint =
-          'https://shelfmate-api-f882711e4206.herokuapp.com/search/${widget.search}-${pageKey * _pageSize}-$_pageSize';
+          '$api/search/${widget.search}-${pageKey * _pageSize}-$_pageSize';
     } else {
       throw Exception("Invalid Search");
     }
-    debugPrint(endpoint);
 
     final response = await http.get(Uri.parse(endpoint));
     if (response.statusCode == 200) {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:shelfmate/book.dart';
 import 'package:shelfmate/book_card.dart';
 import 'package:shelfmate/book_display.dart';
@@ -17,17 +18,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final int numBooks = 5;
+  final int numBooks = 7;
   late Future<List<Book>> futureBooks;
   User? user = FirebaseAuth.instance.currentUser;
   int startIndex = 0;
   List<Book> books = [];
   CardSwiperController cardSwiperController = CardSwiperController();
+  String api = kDebugMode
+      ? "http://10.0.2.2:8000"
+      : 'https://shelfmate-api-f882711e4206.herokuapp.com';
   final dio = Dio();
 
   Future<List<Book>> fetchBooks(int num) async {
-    String endpoint =
-        'https://shelfmate-api-f882711e4206.herokuapp.com/books/${user!.email}-$num';
+    String endpoint = '$api/books/${user!.email}-$num';
+    debugPrint(endpoint);
     final response = await http.get(Uri.parse(endpoint));
     if (response.statusCode == 200) {
       final jsonresponse = json.decode(response.body);
@@ -67,15 +71,20 @@ class _HomePageState extends State<HomePage> {
       "superlike": superlike,
       "bookID": bookID
     };
-    await dio.post(
-        'https://shelfmate-api-f882711e4206.herokuapp.com/updateHistory/${user!.email}',
-        data: bookHistory);
+    await dio.post('$api/updateHistory/${user!.email}', data: bookHistory);
   }
 
   @override
   void initState() {
     super.initState();
     futureBooks = fetchBooks(numBooks);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    books.clear();
   }
 
   @override
@@ -115,10 +124,8 @@ class _HomePageState extends State<HomePage> {
                   updateHistory(previousIndex, direction);
                   startIndex++;
                   if (startIndex % numBooks == 0 && startIndex != 0) {
-                    setState(() async {
-                      books = await fetchBooks(numBooks);
-                    });
                     books.clear();
+                    books = await fetchBooks(numBooks);
                   }
                   // cardSwiperController.moveTo(previousIndex);
                   return true;

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shelfmate/book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
@@ -19,12 +20,15 @@ class _BookDisplayState extends State<BookDisplay> {
   final dio = Dio();
   User? user = FirebaseAuth.instance.currentUser;
   bool inLibrary = false;
+  String api = kDebugMode
+      ? "http://10.0.2.2:8000"
+      : 'https://shelfmate-api-f882711e4206.herokuapp.com';
   late CollectionReference userShelf;
 
   Future<Book> fetchBook() async {
-    debugPrint("Fetching Books");
-    final response = await dio.get(
-        'https://shelfmate-api-f882711e4206.herokuapp.com/books/${widget.bookID}');
+    String endpoint = '$api/book/${widget.bookID}';
+    debugPrint(endpoint);
+    final response = await dio.get(endpoint);
     if (response.statusCode == 200) {
       return Book(
           bookID: response.data['bookID'],
@@ -46,9 +50,7 @@ class _BookDisplayState extends State<BookDisplay> {
       "superlike": superlike,
       "bookID": id
     };
-    await dio.post(
-        'https://shelfmate-api-f882711e4206.herokuapp.com/updateHistory/${user!.email}',
-        data: bookHistory);
+    await dio.post('$api/updateHistory/${user!.email}', data: bookHistory);
   }
 
   @override
@@ -94,7 +96,7 @@ class _BookDisplayState extends State<BookDisplay> {
                           userShelf.add({
                             "title": book.title,
                             "authors": book.authors,
-                            "id": book.bookID,
+                            "bookID": book.bookID,
                             "description": book.description,
                             "pageCount": book.pageCount,
                             "link": book.link,
@@ -104,7 +106,7 @@ class _BookDisplayState extends State<BookDisplay> {
                         }
                         Navigator.pop(context);
                       },
-                      icon: Icon(inLibrary ? Icons.add : Icons.delete))
+                      icon: inLibrary ? Icon(Icons.delete) : Icon(Icons.add))
                 ],
               ),
               body: Padding(

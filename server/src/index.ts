@@ -157,7 +157,7 @@ app.get(
 
 // BOOK BY ID
 
-app.get("/books/:id", (req: Request, res: Response) => {
+app.get("/book/:id", (req: Request, res: Response) => {
   axios
     .get(
       `https://www.googleapis.com/books/v1/volumes/${req.params.id}?key=${process.env.BOOKS_APIKEY}`

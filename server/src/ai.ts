@@ -68,7 +68,6 @@ const fetchBooksData = async (
     }&key=${process.env.BOOKS_APIKEY}`;
 
     const response = await axios.get(endpoint);
-    console.log(endpoint);
     if (response.data.totalItems == 0) {
       const bookData = await GPTRecommendedBooks(
         _userHistory,
@@ -79,12 +78,30 @@ const fetchBooksData = async (
       continue;
     }
 
-    let book;
+    let book = response.data.items[0];
 
-    for (let i = 0; i < response.data.totalItems; i++) {
-      if (response.data.items[i].title == bookName) {
+    for (let i = 0; i < response.data.items.length; i++) {
+      const fetchedBook = response.data.items[i];
+      if (fetchedBook!.volumeInfo.title == bookName) {
         book = response.data.items[i];
+        console.log(fetchedBook.volumeInfo.title);
+        break;
       }
+      if (fetchedBook.volumeInfo.title.includes(bookName)) {
+        book = response.data.items[i];
+        console.log(fetchedBook.volumeInfo.title);
+        break;
+      }
+    }
+
+    if (book == undefined) {
+      const bookData = await GPTRecommendedBooks(
+        _userHistory,
+        _userPreferences,
+        1
+      );
+      console.log(bookData[0]);
+      continue;
     }
 
     const bookData: Book = {
