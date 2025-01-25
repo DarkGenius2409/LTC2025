@@ -3,13 +3,16 @@ import { Completions } from "openai/resources";
 import ollama from "ollama";
 import axios from "axios";
 import { Book, History, historyToString } from "./types";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const GPTRecommendedBooks = async (
   _userHistory: History[],
   _userPreferences: any[],
   num: number
 ): Promise<Book[]> => {
-  const openai = new OpenAI();
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_APIKEY });
   let userHistoryString: string = "";
   _userHistory.forEach((history: History) => {
     return (userHistoryString += historyToString(history));
@@ -75,7 +78,14 @@ const fetchBooksData = async (
       booksData.push(bookData[0]);
       continue;
     }
-    const book = response.data.items[0];
+
+    let book;
+
+    for (let i = 0; i < response.data.totalItems; i++) {
+      if (response.data.items[i].title == bookName) {
+        book = response.data.items[i];
+      }
+    }
 
     const bookData: Book = {
       bookID: book.id,
